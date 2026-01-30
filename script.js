@@ -118,7 +118,7 @@ function operate(operator,number1,number2) {
 }
 
 
-function updateOperator() {
+function updateOperatorAndFindNumber1() {
     for(let i = 0; i < operators.length;++i) {
         //console.log(operators[i].operator)
         operators[i].operator.addEventListener("click",()=> {
@@ -128,22 +128,54 @@ function updateOperator() {
             console.log(`This is the input value from updateOperator function ${input.value}`)
             console.log(`This is the length of the input ${input.value.length}`)
             
-            let list = []
+            // Trouver le nombre d'operateurs grace au fait que les operateur vont devenir NaN donc je com
+            let listForCountNaN = []
+            let numberOfNaN = 0
             for (let i = 0; i < input.value.length;++i) {
-                //console.log(input.value[i])
-                console.log(parseInt(input.value[i]))
-                //console.log(typeof(parseInt(input.value[i])))
-                if(!(Number.isNaN(parseInt(input.value[i])))) {
-                    list.push(parseInt(input.value[i]))
-                    console.log(list)
-
+                listForCountNaN.push(parseInt(input.value[i]))
+                if(Number.isNaN(parseInt(input.value[i]))) {
+                    numberOfNaN = numberOfNaN + 1
                 }
             }
-            joinList = list.join()
-            // Garder en string et le mettre en numero au moment du calcul
-            number1InString = joinList.replaceAll(",","")
-            console.log(number1InString)
-            console.log(typeof(number1InString))
+            console.log(`This is the number of NaN ${numberOfNaN}`)
+            console.log(`This is list for NaN count ${listForCountNaN}`)
+
+            if(numberOfNaN == 1 ) {
+
+                let list = []
+                for (let i = 0; i < input.value.length;++i) {
+                    //console.log(input.value[i])
+                    console.log(parseInt(input.value[i]))
+                    //console.log(typeof(parseInt(input.value[i])))
+                    
+                    if(!(Number.isNaN(parseInt(input.value[i])))) {
+                        list.push(parseInt(input.value[i]))
+                        console.log(list)
+
+                    }
+                }
+                joinList = list.join()
+                // Garder en string et le mettre en numero au moment du calcul
+                number1InString = joinList.replaceAll(",","")
+                console.log(`this number1 ${number1InString}`)
+                console.log(typeof(number1InString))
+            }
+
+            // let list2 = []
+            // for (let i = 0; i < input.value.length;++i) {
+            //     console.log(parseInt(input.value[i]))
+            //     //console.log(typeof(parseInt(input.value[i])))
+            //     if(typeof(parseInt(input.value[i])) == "number") {
+            //         continue
+            //     }
+            //     if(Number.isNaN(parseInt(input.value[i]))) {
+            //         continue
+            //     }
+            //     if(typeof(parseInt(input.value[i])) == "number") {
+            //         list2.push(parseInt(input.value[i]))
+            //         console.log(`this is list 2 ${list2}`)
+            //     }
+            // }
             
 
         })
@@ -169,7 +201,6 @@ function updateNumber1() {
 
 function findNumber1() {
     updateNumber1()
-    updateOperator()
 } 
 
 function findNumber2() {
@@ -177,7 +208,7 @@ function findNumber2() {
 
 } 
 
-
+updateOperatorAndFindNumber1()
 
 
 // function findNumber1() {
