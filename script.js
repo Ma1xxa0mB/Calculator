@@ -103,6 +103,8 @@ function divide(a,b) {
 }
 
 function operate(operator,number1,number2) {
+    number1 = parseInt(number1)
+    number2 = parseInt(number2)
     if(operator === "+") {
         return add(number1,number2)
     }
@@ -115,10 +117,13 @@ function operate(operator,number1,number2) {
     else if (operator === "/") {
         return divide(number1,number2)
     }
+    
 }
 
 
-function updateOperatorAndFindNumber1() {
+async function  updateOperatorAndFindNumber1() {
+    let number1InString = "" // Fiche pour savoir pk
+    let number2InString = "" // Fiche pour savoir pk
     for(let i = 0; i < operators.length;++i) {
         //console.log(operators[i].operator)
         operators[i].operator.addEventListener("click",()=> {
@@ -131,17 +136,26 @@ function updateOperatorAndFindNumber1() {
             // Trouver le nombre d'operateurs grace au fait que les operateur vont devenir NaN donc je com
             let listForCountNaN = []
             let numberOfNaN = 0
+            let listForFirstOperator = []
+
             for (let i = 0; i < input.value.length;++i) {
                 listForCountNaN.push(parseInt(input.value[i]))
+                listForFirstOperator.push(input.value[i])
                 if(Number.isNaN(parseInt(input.value[i]))) {
                     numberOfNaN = numberOfNaN + 1
                 }
             }
             console.log(`This is the number of NaN ${numberOfNaN}`)
             console.log(`This is list for NaN count ${listForCountNaN}`)
+            console.log(`This is list for stock first operator ${listForFirstOperator}`)
 
             if(numberOfNaN == 1 ) {
 
+                // Find first operator
+                for (let i = 0; i < listForFirstOperator.length;++i) {
+                    firstOperator = listForFirstOperator[i]
+                    console.log(`This is the first operator ${firstOperator}`)
+                }
                 let list = []
                 for (let i = 0; i < input.value.length;++i) {
                     //console.log(input.value[i])
@@ -197,7 +211,11 @@ function updateOperatorAndFindNumber1() {
                 // Garder en string et le mettre en numero au moment du calcul
                 number2InString = number2JoinList.replaceAll(",","")
                 console.log(`this number2 ${number2InString}`)
-            }    
+                console.log(`This is operate ${operate(operator,number1InString,number2InString)}`)// PK ici Fiche
+                input.value = operate(firstOperator,number1InString,number2InString) + operator
+            }
+            
+                   
         }) 
     }
 }
@@ -225,11 +243,8 @@ clearButton.addEventListener("click",()=>{
 })
 
 updateNumber1()
-
 updateOperatorAndFindNumber1()
 
-
-//operate(operator,number1InString,number2InString)
 
 // function findNumber1() {
 //     for(let i = 0; i < operators.length;++i) {
