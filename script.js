@@ -159,30 +159,50 @@ function updateOperatorAndFindNumber1() {
                 number1InString = joinList.replaceAll(",","")
                 console.log(`this number1 ${number1InString}`)
                 console.log(typeof(number1InString))
+                
             }
 
-            // let list2 = []
-            // for (let i = 0; i < input.value.length;++i) {
-            //     console.log(parseInt(input.value[i]))
-            //     //console.log(typeof(parseInt(input.value[i])))
-            //     if(typeof(parseInt(input.value[i])) == "number") {
-            //         continue
-            //     }
-            //     if(Number.isNaN(parseInt(input.value[i]))) {
-            //         continue
-            //     }
-            //     if(typeof(parseInt(input.value[i])) == "number") {
-            //         list2.push(parseInt(input.value[i]))
-            //         console.log(`this is list 2 ${list2}`)
-            //     }
-            // }
-            
+            if(numberOfNaN == 2 ) {
+                console.log("I'm in if number 2")
+                let list2 = []
+                for (let i = 0; i < input.value.length;++i) {
+                    console.log(`this the characters in if 2 ${parseInt(input.value[i])}`)
+                    list2.push(parseInt(input.value[i]))
+                }
+                console.log(list2)
 
-        })
+                // Obtenir numero 2 : Tant que je n'ai pas rencontré un NaN je ne stock pas de numero
+                encounterNaN = 0
+                number2ListWithNaNAtStart = []
+                for (let i = 0; i < list2.length;++i) {
+                    if(Number.isNaN(list2[i])) {
+                        encounterNaN = encounterNaN + 1
+                    }
+
+                    if (encounterNaN == 1) {
+                        number2ListWithNaNAtStart.push(list2[i])
+                    }
+                }
+                console.log(number2ListWithNaNAtStart)
+
+                // number2List a le NaN au debut du coup je crée une liste sans NaN
+                number2List = []
+                for(let i = 0; i < number2ListWithNaNAtStart.length;++i) {
+                    if(!(Number.isNaN(number2ListWithNaNAtStart[i]))) {
+                        number2List.push(number2ListWithNaNAtStart[i])
+                    }
+                }
+                console.log(`This the number2List without NaN at the start ${number2List}`)
+                number2JoinList = number2List.join()
+                // Garder en string et le mettre en numero au moment du calcul
+                number2InString = number2JoinList.replaceAll(",","")
+                console.log(`this number2 ${number2InString}`)
+            }    
+        }) 
     }
 }
 
-// Fonction qui a uniquement utilité de
+// Affiche le numero cliqué dans l'input
 function updateNumber1() {
     for(let i = 0; i < numbers.length;++i) {
         //console.log(numbers[i].buttonNumber)
@@ -199,17 +219,17 @@ function updateNumber1() {
     }
 }
 
-function findNumber1() {
-    updateNumber1()
-} 
+// Clear input value
+clearButton.addEventListener("click",()=>{
+    input.value = ""
+})
 
-function findNumber2() {
-    
-
-} 
+updateNumber1()
 
 updateOperatorAndFindNumber1()
 
+
+//operate(operator,number1InString,number2InString)
 
 // function findNumber1() {
 //     for(let i = 0; i < operators.length;++i) {
@@ -238,16 +258,5 @@ updateOperatorAndFindNumber1()
 //     }
 // }
 
-
-// Clear input value
-clearButton.addEventListener("click",()=>{
-    input.value = ""
-})
-
-
-findNumber1()
-findNumber2()
-
-operate(operator,number1,number2)
 
 
