@@ -121,7 +121,7 @@ function operate(operator,number1,number2) {
 }
 
 
-async function  updateOperatorAndFindNumber1() {
+function  updateOperatorAndFindNumber1() {
     let number1InString = "" // Fiche pour savoir pk
     let number2InString = "" // Fiche pour savoir pk
     for(let i = 0; i < operators.length;++i) {
@@ -211,11 +211,15 @@ async function  updateOperatorAndFindNumber1() {
                 // Garder en string et le mettre en numero au moment du calcul
                 number2InString = number2JoinList.replaceAll(",","")
                 console.log(`this number2 ${number2InString}`)
-                console.log(`This is operate ${operate(operator,number1InString,number2InString)}`)// PK ici Fiche
+                console.log(`This is operate ${operate(firstOperator,number1InString,number2InString)}`)// PK ici Fiche
+                
+                
                 input.value = operate(firstOperator,number1InString,number2InString) + operator
-            }
-            
-                   
+                // Le résultat de l'operation devient le number1 pour continuer la boucle
+                number1InString = operate(firstOperator,number1InString,number2InString)
+                // On actualise aussi le nouvel operateur
+                firstOperator = operator
+            }            
         }) 
     }
 }
