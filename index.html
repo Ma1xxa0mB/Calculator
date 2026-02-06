@@ -4,25 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button id="0">0</button>
-    <button id="1">1</button>
-    <button id="2">2</button>
-    <button id="3">3</button>
-    <button id="4">4</button>
-    <button id="5">5</button>
-    <button id="6">6</button>
-    <button id="7">7</button>
-    <button id="8">8</button>
-    <button id="9">9</button>
-    <button class="operator" id="addition">+</button>
-    <button class="operator" id="subtraction">-</button>
-    <button class="operator" id="multiplication">x</button>
-    <button class="operator" id="division">/</button>
-    <button>=</button>
-    <button id="clearButton">clear</button>
-    <input type="text">
+    <div class="containerCalculator">
+        
+        <div class = "containerInput"> 
+            <input type="text">
+        </div>
+
+        <div class = "containerButtons">
+            <button class="greyButton" id="clearButton">AC</button>
+            <button class="greyButton" id="DEButton">DE</button>
+            <button class="greyButton">.</button>
+            <button class="operator" id="division">÷</button>
+        
+            <button class="numberButton" id="7">7</button>
+            <button class="numberButton" id="8">8</button>
+            <button class="numberButton" id="9">9</button>
+            <button class="operator" id="multiplication">×</button>
+        
+            <button class="numberButton" id="4">4</button>
+            <button class="numberButton" id="5">5</button>
+            <button class="numberButton" id="6">6</button>
+            <button class="operator" id="subtraction">-</button>
+        
+            <button class="numberButton" id="1">1</button>
+            <button class="numberButton" id="2">2</button>
+            <button class="numberButton" id="3">3</button>
+            <button class="operator" id="addition">+</button>
+        
+            <button class="numberButton" id="0">0</button>
+            <button class="operator" id = "equal">=</button>
+            
+        </div>
+
+    </div>
+    
 <script src="script.js"></script>
 </body>
 </html>
