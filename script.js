@@ -19,7 +19,10 @@ let division = document.getElementById("division")
 let clearButton = document.getElementById("clearButton")
 let deButton = document.getElementById("DEButton")
 
+let point = document.getElementById("point")
+
 let input = document.querySelector("input")
+input.value = "0"
 
 let operators = [
     {
@@ -89,33 +92,44 @@ function add(a,b) {
 }
 
 function substract(a,b) {
-    return a-b  
+    return a - b  
 }
 
 function multiply(a,b) {
-    return a*b 
+    return a * b 
 }
 
 function divide(a,b) {
-    return a/b
+    if (b == 0) {
+        return "Undefined"
+    }
+    else {
+        return a/b
+    }
 }
 
 function operate(operator,number1,number2) {
-    // Je travaille avec des strings donc je transforme en number
-    number1 = parseInt(number1)
-    number2 = parseInt(number2)
+    // Je travaille avec des strings donc je transforme en nombre float puisque g des points
+    number1 = parseFloat(number1)
+    number2 = parseFloat(number2)
+    console.log(`This is float number1 ${number1}`)
+    console.log(`This is float number2 ${number2}`)
     
     if(operator === "+") {
-        return add(number1,number2)
+        result = add(number1,number2)
+        return Math.round(result * 100) / 100
     }
     else if (operator === "-") {
-        return substract(number1,number2)
+        result = substract(number1,number2)
+        return Math.round(result * 100) / 100
     }
     else if (operator === "x") {
-        return multiply(number1,number2)
+        result = multiply(number1,number2)
+        return Math.round(result * 100) / 100
     }
     else if (operator === "/") {
-        return divide(number1,number2)
+        result = divide(number1,number2)
+        return Math.round(result * 100) / 100
     }
     
 }
@@ -131,6 +145,7 @@ for(let i = 0; i < numbers.length;++i) {
         numberClicked = numbers[i].value
         console.log(`This is the number clicked ${numberClicked}`)
         currentNumber = currentNumber + numberClicked
+        displayNumber(currentNumber)
         console.log(`This is the current number ${currentNumber}`)
     })
 }
@@ -143,7 +158,8 @@ for(let i = 0; i < operators.length;++i) {
         
         currentOperator = operatorClicked
         console.log(`This is the current operator ${currentOperator}`)
-        
+        displayNumberAndOperator(currentOperator)
+
         console.log(`This is the previous number ${previousNumber}`)
     
         if (previousNumber == "") {
@@ -162,6 +178,7 @@ for(let i = 0; i < operators.length;++i) {
 
             previousNumber = operate(previousOperator,previousNumber,currentNumber)
             console.log(`This is the previous number ${previousNumber}`)
+            displayNumber(previousNumber)
             
             previousOperator = currentOperator 
             console.log(`This is the previous operator ${previousOperator}`)
@@ -172,26 +189,47 @@ for(let i = 0; i < operators.length;++i) {
     })     
 }
 
+// nombre décimaux
+point.addEventListener("click",() => {
+    console.log(`This is the current number in point ${currentNumber}`)
+    // Seulement un point
+    if (!(currentNumber.includes("."))) {
+        currentNumber = currentNumber + "."
+        console.log(`This is the current number ${currentNumber}`)
+        displayNumber(currentNumber)
+    }
+
+})
+
 // Gives the result when clicking equal
 equal.addEventListener("click",()=> {
     console.log("equal clicked")
-    console.log(currentOperator)
     console.log(previousNumber)
+    console.log(previousOperator)
     console.log(currentNumber)
-    result = operate(currentOperator,previousNumber,currentNumber) 
+    result = operate(previousOperator,previousNumber,currentNumber) 
     console.log(result)
+    displayNumber(result)
 })
 
 // Clear input value and values 
 function clear() {
     clearButton.addEventListener("click",()=>{
         console.log("AC button clicked")
-        input.value = ""
+        input.value = "0"
         currentNumber = ""
         previousNumber = ""
         currentOperator = ""
         previousOperator = ""
     })
+}
+
+function displayNumber(number) {
+    input.value = number
+}
+
+function displayNumberAndOperator(operator) {
+    input.value = input.value + operator 
 }
 
 clear()
