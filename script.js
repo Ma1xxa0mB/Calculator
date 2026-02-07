@@ -112,8 +112,6 @@ function operate(operator,number1,number2) {
     // Je travaille avec des strings donc je transforme en nombre float puisque g des points
     number1 = parseFloat(number1)
     number2 = parseFloat(number2)
-    console.log(`This is float number1 ${number1}`)
-    console.log(`This is float number2 ${number2}`)
     
     if(operator === "+") {
         result = add(number1,number2)
@@ -139,78 +137,192 @@ let currentNumber = ""
 let previousOperator
 let currentOperator
 
+let lastActionWasEqual = false
+
 // Identify the current number
 for(let i = 0; i < numbers.length;++i) {
     numbers[i].buttonNumber.addEventListener("click",()=> {
+        
         numberClicked = numbers[i].value
-        console.log(`This is the number clicked ${numberClicked}`)
+        
         currentNumber = currentNumber + numberClicked
         displayNumber(currentNumber)
-        console.log(`This is the current number ${currentNumber}`)
+        
+
+        // Flag
+        if (lastActionWasEqual == true) {
+            console.log("")
+            console.log("State : IN THE FLAG OF NUMBER")
+            console.log(`before previous number ${previousNumber}`)
+            console.log(`before current number ${currentNumber}`)
+            console.log(`before previous operator ${previousOperator}`)
+            console.log(`before current operator ${currentOperator}`)
+            currentNumber = numberClicked
+            displayNumber(currentNumber)
+            console.log(`after previous number ${previousNumber}`)
+            console.log(`after current number ${currentNumber}`)
+            console.log(`after previous operator ${previousOperator}`)
+            console.log(`after current operator ${currentOperator}`)
+            lastActionWasEqual == false
+            return
+        }
+
+        
+        console.log("")
+        console.log("State : AFTER NUMBER CLICK")
+        console.log(`Equal sign clicked : ${lastActionWasEqual}`)
+        
+        
+        console.log(`previous number ${previousNumber}`)
+        console.log(`current number ${currentNumber}`)
+        console.log(`previous operator ${previousOperator}`)
+        console.log(`current operator ${currentOperator}`)
+        
     })
 }
 
+// deButton.addEventListener("click", () => {
+//     console.log("We click the delete button")
+//     console.log(`previous number ${previousNumber}`)
+//     console.log(`current number ${currentNumber}`)
+//     console.log(`previous operator ${previousOperator}`)
+//     console.log(`current operator ${currentOperator}`)
+    
+    
+//     // Empecher le cas où 105+ de enlever currentNumber entierement car à ce moment là considéré en tant que empty
+//     if (currentNumber == "") {
+
+//     }
+//     else {
+//         currentNumber = removeCharacter(currentNumber)
+//         displayNumber(currentNumber)
+//         console.log(`current number ${currentNumber}`)
+//     }
+// })
+
 for(let i = 0; i < operators.length;++i) {
     operators[i].buttonOperator.addEventListener("click",()=> {
-       
-        operatorClicked = operators[i].value
-        console.log(`This is the operator clicked ${operatorClicked}`)
         
+        // This is the operator clicked
+        operatorClicked = operators[i].value
+        
+        // This is the current operator
         currentOperator = operatorClicked
-        console.log(`This is the current operator ${currentOperator}`)
-        displayNumberAndOperator(currentOperator)
 
-        console.log(`This is the previous number ${previousNumber}`)
-    
+        displayNumberAndOperator(currentOperator)
+        
+
+
+        // Flag
+        if (lastActionWasEqual == true) {
+            console.log("")
+            console.log("State : IN THE FLAG OF OPERATOR")
+            console.log(`previous number ${previousNumber}`)
+            console.log(`current number ${currentNumber}`)
+            console.log(`previous operator ${previousOperator}`)
+            console.log(`current operator ${currentOperator}`)
+
+            // Je garde la meme logique egalement à l'interieur du flag
+            
+            if (previousNumber == "") {
+            
+                console.log("State : NO OPERATION")
+
+                console.log(`before previous number ${previousNumber}`)
+                console.log(`before current number ${currentNumber}`)
+                console.log(`before previous operator ${previousOperator}`)
+                console.log(`before current operator ${currentOperator}`)
+                
+                previousNumber = currentNumber 
+                currentNumber = ""
+                previousOperator = currentOperator
+                
+                console.log("State : AFTER CONDITION ")
+
+                console.log(`previous number ${previousNumber}`)
+                console.log(`current number ${currentNumber}`)
+                console.log(`previous operator ${previousOperator}`)
+                console.log(`current operator ${currentOperator}`)
+
+            }
+            lastActionWasEqual == false
+            return
+        }
+         
+        
+        
+        console.log("")
+        console.log(`Equal sign clicked : ${lastActionWasEqual}`)
+       
+        console.log("State : AFTER OPERATOR CLICK")
+
         if (previousNumber == "") {
             
-            // Au moment où je clique sur un operator mon currentNumber devient previousNumber
+            console.log("If previous number empty")
+            console.log("NO OPERATION")
+
+            console.log(`before previous number ${previousNumber}`)
+            console.log(`before current number ${currentNumber}`)
+            console.log(`before previous operator ${previousOperator}`)
+            console.log(`before current operator ${currentOperator}`)
+            
             previousNumber = currentNumber 
-            console.log(`This is the previous number ${previousNumber}`)
-            
             currentNumber = ""
-            console.log(`This is the current number ${currentNumber}`)
-            
             previousOperator = currentOperator
-            console.log(`This is the previous operator ${previousOperator}`)
+            
+            console.log("State : AFTER CONDITION ")
+
+            console.log(`previous number ${previousNumber}`)
+            console.log(`current number ${currentNumber}`)
+            console.log(`previous operator ${previousOperator}`)
+            console.log(`current operator ${currentOperator}`)
         }
         else if (previousNumber !== "") {
+            console.log("If previous number is not empty")
+            console.log("MAKE OPERATION")
 
             previousNumber = operate(previousOperator,previousNumber,currentNumber)
-            console.log(`This is the previous number ${previousNumber}`)
             displayNumber(previousNumber)
-            
+            console.log("Operation made")
+
             previousOperator = currentOperator 
-            console.log(`This is the previous operator ${previousOperator}`)
-            
             currentNumber = ""
-            console.log(`This is the current number ${currentNumber}`)
-        }   
-    })     
+
+            console.log(`previous number ${previousNumber}`)
+            console.log(`current number ${currentNumber}`)
+            console.log(`previous operator ${previousOperator}`)
+            console.log(`current operator ${currentOperator}`)
+            
+        } 
+        
+    }) 
 }
-
-// nombre décimaux
-point.addEventListener("click",() => {
-    console.log(`This is the current number in point ${currentNumber}`)
-    // Seulement un point
-    if (!(currentNumber.includes("."))) {
-        currentNumber = currentNumber + "."
-        console.log(`This is the current number ${currentNumber}`)
-        displayNumber(currentNumber)
-    }
-
-})
 
 // Gives the result when clicking equal
 equal.addEventListener("click",()=> {
-    console.log("equal clicked")
-    console.log(previousNumber)
-    console.log(previousOperator)
-    console.log(currentNumber)
-    result = operate(previousOperator,previousNumber,currentNumber) 
-    console.log(result)
-    displayNumber(result)
+    
+    lastActionWasEqual = true
+    
+    // Je prends currentNumber en tant que resultat pcq après avoir appuyer sur egal je suis dans l'etape une où g currentNumber qui est le résultat obtenu et rien d'autre
+    currentNumber = operate(previousOperator,previousNumber,currentNumber)
+    displayNumber(currentNumber)
+    
+    // Vu que je veux continuer avec les operateurs il faut que je reinitialise les valeurs
+    previousNumber = ""
+    currentOperator = ""
+    previousOperator = "" 
+    
+    console.log("")
+    console.log(`Equal sign clicked : ${lastActionWasEqual}`)
+    console.log("State : AFTER EQUAL SIGN CLICK")
+    console.log(`previous number ${previousNumber}`)
+    console.log(`current number ${currentNumber}`)
+    console.log(`previous operator ${previousOperator}`)
+    console.log(`current operator ${currentOperator}`)
+    
+    
 })
+
 
 // Clear input value and values 
 function clear() {
@@ -224,6 +336,28 @@ function clear() {
     })
 }
 
+// nombre décimaux
+point.addEventListener("click",() => {
+    console.log(`This is the current number in point ${currentNumber}`)
+    // Seulement un point
+    if (!(currentNumber.includes("."))) {
+        currentNumber = currentNumber + "."
+        console.log(`This is the current number ${currentNumber}`)
+        displayNumber(currentNumber)
+        
+    }
+
+})
+
+// deButton.addEventListener("click", () => {
+//     removeCharacter(currentNumber)
+// })
+
+// function removeCharacter(str) {
+//     let newString = str.slice(0, -1);
+//     return newString;
+// }
+
 function displayNumber(number) {
     input.value = number
 }
@@ -231,6 +365,7 @@ function displayNumber(number) {
 function displayNumberAndOperator(operator) {
     input.value = input.value + operator 
 }
+
 
 clear()
 
