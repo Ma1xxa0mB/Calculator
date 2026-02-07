@@ -327,12 +327,20 @@ equal.addEventListener("click",()=> {
 // Clear input value and values 
 function clear() {
     clearButton.addEventListener("click",()=>{
-        console.log("AC button clicked")
+        lastActionWasEqual = false
         input.value = "0"
         currentNumber = ""
         previousNumber = ""
         currentOperator = ""
         previousOperator = ""
+
+        console.log("")
+        console.log(`Equal sign clicked : ${lastActionWasEqual}`)
+        console.log("State : AFTER CLEAR CLICK")
+        console.log(`previous number ${previousNumber}`)
+        console.log(`current number ${currentNumber}`)
+        console.log(`previous operator ${previousOperator}`)
+        console.log(`current operator ${currentOperator}`)
     })
 }
 
