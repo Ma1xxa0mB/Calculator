@@ -35,6 +35,7 @@ function divide(a,b) {
     }
 }
 
+
 function operate(operator,number1,number2) {
     // Je travaille avec des strings donc je transforme en nombre float puisque g des points
     number1 = parseFloat(number1)
@@ -54,6 +55,13 @@ function operate(operator,number1,number2) {
     
 }
 
+state = {
+    previousNumber :  "",
+    currentNumber : "",
+    previousOperator : "",
+    currentOperator : "",
+    lastActionWasEqual : false
+}
 
 
 // When clicking a number 
@@ -63,16 +71,33 @@ for(let i = 0; i < numbers.length;++i) {
         numberClicked = numbers[i].innerHTML
         
         currentNumber = currentNumber + numberClicked
-        displayNumber(currentNumber)
+        
+        // Update the state
+        state.currentNumber = currentNumber
+        console.log(state)
+        
+        //displayNumber(currentNumber)
+        updateInput()
         
         
         // Flag
         if (lastActionWasEqual == true) {
             
             currentNumber = numberClicked
-            displayNumber(currentNumber)
+            
+            //displayNumber(currentNumber)
+            
+            // Update the state
+            state.currentNumber = currentNumber
+            state.lastActionWasEqual = true
+            updateInput()
+            console.log(state)
             
             lastActionWasEqual = false
+
+            // update state
+            state.lastActionWasEqual = lastActionWasEqual
+            
             return
         }
 
@@ -86,43 +111,85 @@ for(let i = 0; i < numbers.length;++i) {
 for(let i = 0; i < operators.length;++i) {
     operators[i].addEventListener("click",()=> {
         
-        // This is the operator clicked
-        operatorClicked = operators[i].innerHTML
+        // // This is the operator clicked
+        // operatorClicked = operators[i].innerHTML
         
-        // This is the current operator
-        currentOperator = operatorClicked
+        // // This is the current operator
+        // currentOperator = operatorClicked
 
-        displayNumberAndOperator(currentOperator)
+        // // Update the state
+        // state.currentOperator = currentOperator
+        // console.log(state)
+
+        //displayNumberAndOperator(currentOperator)
+        //updateInput()
         
         // CAS FLAG 
         // Il a uniquement a identifier l'etat du prochain clique
         if (lastActionWasEqual == true) {
             
             if (previousNumber == "") {
-            
+                operatorClicked = operators[i].innerHTML
+                currentOperator = operatorClicked
                 prepareFirstOperation()
+                currentOperator = ""
+                // Update the state
+                state.previousNumber = previousNumber
+                state.currentNumber = currentNumber
+                state.previousOperator = previousOperator
+                state.currentOperator = currentOperator
+                state.lastActionWasEqual = true
+                updateInput()
+                console.log(state)
             }
 
             lastActionWasEqual = false
+            
+            // update state
+            state.lastActionWasEqual = lastActionWasEqual
+
             return
         }
         
         // CAS NORMAL
 
         if (previousNumber == "") {
-            
+            operatorClicked = operators[i].innerHTML
+            currentOperator = operatorClicked
             prepareFirstOperation()
+            currentOperator = ""
+        
             
+            // Update the state
+            state.previousNumber = previousNumber
+            state.currentNumber = currentNumber
+            state.previousOperator = previousOperator
+            state.currentOperator = currentOperator
+            console.log(state)
+            updateInput()
         }
         else if (previousNumber !== "") {
-
+            operatorClicked = operators[i].innerHTML
+            currentOperator = operatorClicked
             previousNumber = operate(previousOperator,previousNumber,currentNumber)
-            displayNumber(previousNumber)
+            //displayNumber(previousNumber)
 
             previousOperator = currentOperator 
-            currentNumber = ""  
+            currentOperator = ""
+            currentNumber = "" 
+            
+
+
+            // update state
+            state.previousNumber = previousNumber
+            state.previousOperator = previousOperator
+            state.currentNumber = currentNumber
+            state.currentOperator = currentOperator
+            updateInput() 
+            console.log(state)
         }   
     }) 
+    
 }
 
 
@@ -133,13 +200,23 @@ equal.addEventListener("click",()=> {
     
     // Je prends currentNumber en tant que resultat pcq après avoir appuyer sur egal je suis dans l'etape une où g currentNumber qui est le résultat obtenu et rien d'autre
     currentNumber = operate(previousOperator,previousNumber,currentNumber)
-    displayNumber(currentNumber)
+    //displayNumber(currentNumber)
     
     
     // Vu que je veux continuer avec les operateurs il faut que je reinitialise les valeurs
     previousNumber = ""
     currentOperator = ""
-    previousOperator = ""   
+    previousOperator = ""  
+    
+    
+
+    // Update state 
+    state.currentNumber = currentNumber
+    state.previousNumber = previousNumber
+    state.currentOperator = currentOperator
+    state.previousOperator = previousOperator
+    updateInput()
+    console.log(state)
 })
 
 
@@ -175,7 +252,18 @@ function prepareFirstOperation() {
     previousNumber = currentNumber 
     currentNumber = ""
     previousOperator = currentOperator
+    
+   
 }
+
+// function prepareFirstOperationAfterEqual() {
+
+//     previousNumber = currentNumber 
+//     currentNumber = ""
+//     previousOperator = currentOperator
+    
+   
+// }
 
 // Clear input value and values 
 function clear() {
@@ -186,6 +274,14 @@ function clear() {
         previousNumber = ""
         currentOperator = ""
         previousOperator = ""
+
+        // Update state 
+        state.currentNumber = currentNumber
+        state.previousNumber = previousNumber
+        state.currentOperator = currentOperator
+        state.previousOperator = previousOperator
+        console.log(state)
+        
     })
 }
 
@@ -195,7 +291,12 @@ point.addEventListener("click",() => {
     // Seulement un point
     if (!(currentNumber.includes("."))) {
         currentNumber = currentNumber + "."
-        displayNumber(currentNumber)   
+        //displayNumber(currentNumber) 
+        
+        // Update state 
+        state.currentNumber = currentNumber
+        updateInput()
+        console.log(state)
     }
 })
 
@@ -204,13 +305,31 @@ function removeCharacter(str) {
     return newString;
 }
 
-function displayNumber(number) {
-    input.value = number
+
+
+function updateInput() {
+    console.log(state.currentNumber)
+    console.log(state.previousNumber)
+    console.log(state.currentOperator)
+    console.log(state.previousOperator)
+    if (state.currentNumber !== "" && state.previousNumber == "" && state.previousOperator == "" && state.currentOperator == ""  ) {
+        return input.value = state.currentNumber
+    }
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.previousOperator !== "" && state.currentOperator == ""  ) {
+        return input.value = state.previousNumber + state.previousOperator
+        
+    }
+    else if (state.currentNumber !== "" && state.previousNumber !== "" && state.previousOperator !== "" && state.currentOperator == ""  ) {
+        return input.value = state.previousNumber + state.previousOperator + state.currentNumber
+        
+    }
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.previousOperator == "" && state.currentOperator == ""  ) {
+        return input.value = state.previousNumber 
+        
+    }
 }
 
-function displayNumberAndOperator(operator) {
-    input.value = input.value + operator 
-}
+
 
 
 clear()
