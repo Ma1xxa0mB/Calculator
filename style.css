@@ -50,6 +50,12 @@ input {
     color: #FFFFFF;
 }
 
+/* equal sign */
+#equal {
+    background-color: #FF9F0A;
+    color: #FFFFFF;
+}
+
 .greyButton {
    background-color:#A5A5A5;
    color: #FFFFFF;
