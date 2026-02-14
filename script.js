@@ -8,10 +8,9 @@ let input = document.querySelector("input")
 
 input.value = "0"
 
-state = {
+let state = {
     previousNumber :  "",
     currentNumber : "",
-    previousOperator : "",
     currentOperator : "",
     lastActionWasEqual : false
 }
@@ -53,41 +52,33 @@ function operate(operator,number1,number2) {
 
     const result = operationFunction(number1, number2)
 
+    if (result == "Undefined") return "Undefined"
     return Math.round(result * 100) / 100 // arrondie
     
 }
-
 
 // When clicking a number 
 for(let i = 0; i < numbers.length;++i) {
     numbers[i].addEventListener("click",()=> {
         
-        numberClicked = numbers[i].innerHTML
-    
-        // Update the state
-        state.currentNumber = state.currentNumber + numberClicked
-        
-        console.log(state)
-        updateInput()
-        
-        
+        let numberClicked = numbers[i].innerHTML
         
         // Flag
         if (state.lastActionWasEqual == true) {
-
             state.currentNumber = numberClicked
-            state.lastActionWasEqual = true
             
             console.log(state)
             updateInput()
             
-
             state.lastActionWasEqual = false
             return
         }
 
-        state.lastActionWasEqual = false
+        // Cas normal
+        state.currentNumber = state.currentNumber + numberClicked
         
+        console.log(state)
+        updateInput()
     })
 }
 
@@ -96,49 +87,44 @@ for(let i = 0; i < numbers.length;++i) {
 for(let i = 0; i < operators.length;++i) {
     operators[i].addEventListener("click",()=> {
         
-        // CAS FLAG 
-        // Il a uniquement a identifier l'etat du prochain clique
+        // Flag
         if (state.lastActionWasEqual == true) {
             
             if (state.previousNumber == "") {
                 operatorClicked = operators[i].innerHTML
+                
                 state.currentOperator = operatorClicked
-                prepareFirstOperation()
-                state.currentOperator = ""
-                state.lastActionWasEqual = true
+                state.previousNumber = state.currentNumber 
+                state.currentNumber = ""
+                
                 
                 console.log(state)
                 updateInput()
-                
-        
             }
             
             state.lastActionWasEqual = false
-
             return
         }
         
-        // CAS NORMAL
-
+        // Cas normal
         if (state.previousNumber == "") {
             operatorClicked = operators[i].innerHTML
+            
             state.currentOperator = operatorClicked
-            prepareFirstOperation()
-            state.currentOperator = ""
-        
+            state.previousNumber = state.currentNumber 
+            state.currentNumber = ""
+            
             console.log(state)
             updateInput()
             
         }
         else if (state.previousNumber !== "") {
-           operatorClicked = operators[i].innerHTML
-            
-           state.currentOperator = operatorClicked
-            
-            state.previousNumber = operate(state.previousOperator,state.previousNumber,state.currentNumber)
-            
-            state.previousOperator = state.currentOperator 
-            state.currentOperator = ""
+            operatorClicked = operators[i].innerHTML
+    
+            // On utilise le bon operateur et pas celui qu'on a appuyé
+            state.previousNumber = operate(state.currentOperator,state.previousNumber,state.currentNumber)
+            // On actualise le nouvel operateur
+            state.currentOperator = operatorClicked
             state.currentNumber = "" 
         
             console.log(state)
@@ -149,71 +135,26 @@ for(let i = 0; i < operators.length;++i) {
     
 }
 
-
 // When clicking equal sign
 equal.addEventListener("click",()=> {
     
     state.lastActionWasEqual = true
     
+    try {
     // Je prends currentNumber en tant que resultat pcq après avoir appuyer sur egal je suis dans l'etape une où g currentNumber qui est le résultat obtenu et rien d'autre
-    state.currentNumber = operate(state.previousOperator,state.previousNumber,state.currentNumber)
+    state.currentNumber = operate(state.currentOperator,state.previousNumber,state.currentNumber)
     
     // Vu que je veux continuer avec les operateurs il faut que je reinitialise les valeurs
     state.previousNumber = ""
-    state.currentOperator = ""
-    state.previousOperator = ""  
+    state.currentOperator = ""  
     
     console.log(state)
     updateInput()
-    
-    
-})
-
-
-// When clicking delete button
-deButton.addEventListener("click", () => {
-    removeCharacter(currentNumber)
-    lastActionWasEqual == false
-    
-    
-    // CAS FLAG
-    if (lastActionWasEqual == true) {
-    
-        lastActionWasEqual = false
-        return
-    }
-    
-    // CAS NORMAL
-    // Empecher le cas où 105+ de enlever currentNumber entierement car à ce moment là considéré en tant que empty
-    if (currentNumber == "" ) {
-        
-    }
-    else {
-        currentNumber = removeCharacter(currentNumber)
-        previousOperator = removeCharacter(previousOperator)
-        currentOperator = removeCharacter(currentOperator)
-        //displayNumber(currentNumber)
+    } 
+    catch {
+        input.value = "Error"
     }
 })
-
-function prepareFirstOperation() {
-
-    state.previousNumber = state.currentNumber 
-    state.currentNumber = ""
-    state.previousOperator = state.currentOperator
-}
-
-// Clear input value and values 
-function clear() {
-    clearButton.addEventListener("click",()=>{
-        state.lastActionWasEqual = false
-        input.value = "0"
-        state.currentNumber = ""
-        state.previousNumber = ""
-        state.currentOperator = ""
-        state.previousOperator = ""    
-    })
-}
 
 // nombre décimaux
 point.addEventListener("click",() => {
@@ -227,36 +168,84 @@ point.addEventListener("click",() => {
     }
 })
 
-function removeCharacter(str) {
-    let newString = str.slice(0, -1);
-    return newString;
+// Clear input value and values 
+function clear() {
+    clearButton.addEventListener("click",()=>{
+        state.currentNumber = ""
+        state.currentOperator = ""  
+        state.previousNumber = ""
+        state.lastActionWasEqual = false
+
+        console.log(state)
+        updateInput()
+    })
 }
 
 function updateInput() {
     console.log(state.previousNumber)
     console.log(state.currentNumber)
-    console.log(state.previousOperator)
     console.log(state.currentOperator)
     console.log(state.lastActionWasEqual)
     
-    if (state.currentNumber !== "" && state.previousNumber == "" && state.previousOperator == "" && state.currentOperator == ""  ) {
+    if (state.currentNumber !== "" && state.previousNumber == "" && state.currentOperator == "") {
         return input.value = state.currentNumber
     }
-    else if (state.currentNumber == "" && state.previousNumber !== "" && state.previousOperator !== "" && state.currentOperator == ""  ) {
-        return input.value = state.previousNumber + state.previousOperator
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.currentOperator !== "") {
+        return input.value = state.previousNumber + state.currentOperator
         
     }
-    else if (state.currentNumber !== "" && state.previousNumber !== "" && state.previousOperator !== "" && state.currentOperator == ""  ) {
-        return input.value = state.previousNumber + state.previousOperator + state.currentNumber
+    else if (state.currentNumber !== "" && state.previousNumber !== "" && state.currentOperator !== "") {
+        return input.value = state.previousNumber + state.currentOperator + state.currentNumber
         
     }
-    else if (state.currentNumber == "" && state.previousNumber !== "" && state.previousOperator == "" && state.currentOperator == ""  ) {
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.currentOperator == "") {
         return input.value = state.previousNumber    
+    }
+    // Je l'ai fait specialement pour le delete boutton avec probleme que current etait "" du coup ca n'enlevait pas le dernier numero
+    else if (state.currentNumber == "" && state.previousNumber == "" && state.currentOperator == "") {
+        return input.value = state.currentNumber
     }
 }
 
 clear()
 
+function removeCharacter(str) {
+    let newString = str.slice(0, -1);
+    return newString;
+}
+
+// When clicking delete button
+deButton.addEventListener("click", () => {
+
+    if (state.currentNumber !== "" && state.previousNumber == "" && state.currentOperator == "") {
+        state.currentNumber = removeCharacter(state.currentNumber)
+    }
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.currentOperator !== "") {
+        state.currentOperator = removeCharacter(state.currentOperator) 
+    }
+    else if (state.currentNumber == "" && state.previousNumber !== "" && state.currentOperator == "") {
+        state.previousNumber = removeCharacter(state.previousNumber)
+    }
+    else if (state.currentNumber !== "" && state.previousNumber !== "" && state.currentOperator !== "") {
+        //let input = state.previousNumber + state.currentOperator + state.currentNumber
+        //input = removeCharacter(state.previousNumber + state.currentOperator + state.currentNumber)
+    }
+
+
+    console.log(state)
+    updateInput()
+    
+    //state.lastActionWasEqual == false
+    
+    
+    // CAS FLAG
+    // En gros on fait rien qd c apres egal 
+    if (state.lastActionWasEqual == true) {
+        
+        state.lastActionWasEqual = false
+        return
+    }
+})
 
 
 
